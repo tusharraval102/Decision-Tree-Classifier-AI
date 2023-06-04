@@ -37,7 +37,6 @@ def decisionTree(header: np.ndarray, dataset: np.ndarray) -> None:
     graph = graphviz.Source(newTree)
     graph.render("Decision Tree")
 
-
 #  Check if the input is valid
 def inputIsValid(dataset):
     return True
@@ -50,25 +49,25 @@ def entropy():
 def split():
     return "null"
 
-
 #  Classify a given set of instances
 def classify():
     return "null"
-
 
 #  Create a user interface for the program
 def userInterface():
     return "null"
 
+#  Return the data without the header
 def returnData(dataset: np.ndarray) -> np.ndarray:
     newDataset = np.delete(dataset, 0,0)
     return newDataset
 
-def printTable(header: np.ndarray, dataset: np.ndarray) -> None:
+#  Print the table using pandas for a cleaner looking table
+def printTable(header: np.ndarray, dataset: np.ndarray) -> pd.DataFrame:
     df = pd.DataFrame(dataset, columns=header)
     blankIndex=[''] * len(df)
     df.index=blankIndex
-    print(df)
+    return(df)
 
 def main():
     dataset = np.array([
@@ -89,12 +88,9 @@ def main():
     
     if(inputIsValid(dataset)):
         newDataset = returnData(dataset)
-        # printTable(dataset[0], newDataset)
+        printTable(dataset[0], newDataset)
         decisionTree(dataset[0],newDataset)
     
-    #  Create a numpy array from the dataset
-    # X = dataset[:, 1:11]  # 
-    # y = dataset[:, 11]
 
 
 
