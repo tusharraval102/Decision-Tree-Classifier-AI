@@ -1,77 +1,14 @@
 # Import all relevent modules for Decision Tree Classification
+from sklearn import preprocessing, tree
+from helpers import returnDataset, returnHeader, returnClassLables, printTable
+from decisionTree import decisionTree, classify, convertInput
 import numpy as np
-import pandas as pd
-from sklearn import tree
-from sklearn import preprocessing
-import graphviz
 
-#  Create a tree using an Entropy based decision tree classifier
-
-def decisionTree(header: np.ndarray, dataset: np.ndarray) -> None:
-    # Find the last column of the dataset - which should be the class column
-    lastColumn = dataset.__len__()-2
-
-    # Split the dataset into X and Y
-    X = dataset[:, 0:lastColumn]
-    Y = dataset[:, lastColumn]
-
-    # Encode the data
-    le = preprocessing.LabelEncoder()
-    
-    # Check if the data is a string or not and transform it
-    for i in range(0, lastColumn):
-        if(type(X[:, i]) == 'int' or type(X[:, i]) == 'float'):
-            continue
-        else:
-            X[:, i] = le.fit_transform(X[:, i])
-    
-    # Transform the Y data
-    Y = le.fit_transform(Y)
-
-    # Create the decision tree
-    clf = tree.DecisionTreeClassifier(criterion="entropy")
-    clf = clf.fit(X, Y)
-
-    # Create the tree using graphviz for export
-    newTree = tree.export_graphviz(clf, out_file=None, feature_names=header[1:11], class_names=le.classes_, filled=True, rounded=True, special_characters=True)
-    graph = graphviz.Source(newTree)
-    graph.render("Decision Tree")
-
-#  Check if the input is valid
-def inputIsValid(dataset):
-    return True
-
-#  Calculate the entropy of a given set of instances
-def entropy():
-    return "null"
-
-#  Calculate the information gain of a given set of instances
-def split():
-    return "null"
-
-#  Classify a given set of instances
-def classify():
-    return "null"
-
-#  Create a user interface for the program
-def userInterface():
-    return "null"
-
-#  Return the data without the header
-def returnData(dataset: np.ndarray) -> np.ndarray:
-    newDataset = np.delete(dataset, 0,0)
-    return newDataset
-
-#  Print the table using pandas for a cleaner looking table
-def printTable(header: np.ndarray, dataset: np.ndarray) -> pd.DataFrame:
-    df = pd.DataFrame(dataset, columns=header)
-    blankIndex=[''] * len(df)
-    df.index=blankIndex
-    return(df)
-
+# Main function of the program
 def main():
+    # Hardcoded dataset for testing
     dataset = np.array([
-        ['Alt', 'Bar', 'Fri', 'Hun', 'Pat', 'Price', 'Rain', 'Res Type', 'Est', 'Wait Time', 'WillWait'],
+        ['Alt', 'Bar', 'Fri', 'Hun', 'Pat', 'Price', 'Rain', 'Res', 'Type', 'Est', 'WillWait'],
         ['Yes', 'No', 'No', 'Yes', 'Some', '$$$', 'No', 'Yes', 'French', '0-10', 'Yes'],
         ['Yes', 'No', 'No', 'Yes', 'Full', '$', 'No', 'No', 'Thai', '30-60', 'No'],
         ['No', 'Yes', 'No', 'No', 'Some', '$', 'No', 'No', 'Burger', '0-10', 'Yes'],
@@ -86,14 +23,41 @@ def main():
         ['Yes', 'Yes', 'Yes', 'Yes', 'Full', '$', 'No', 'No', 'Burger', '30-60', 'Yes']
         ])
     
-    if(inputIsValid(dataset)):
-        newDataset = returnData(dataset)
-        printTable(dataset[0], newDataset)
-        decisionTree(dataset[0],newDataset)
+    # Hardcoded unseen instance for testing
+    unseenInstance = np.array(['No', 'Yes', 'No', 'No', 'Full', '$$$', 'No', 'Yes', 'Italian', '>60'])
+
+    labelEncoders = [preprocessing.LabelEncoder() for i in range(len(dataset[0]))]
+    
+    print("**Dataset**\n")
+    newDataset = returnDataset(dataset)
+    print(newDataset)
+
+    print("\n\n**Header**\n")
+    header = returnHeader(dataset)
+    print(header)
+    
+    print("\n\n**Pretty Table**\n")
+    prettyTable = printTable(dataset[0], newDataset)
+    print(prettyTable)
+    
+    print("\n\n**Class Lables**\n")
+    classLables = returnClassLables(newDataset)
+    print(classLables)
+    
+    print("\n\n**Decision Tree**\n")
+    decision = decisionTree(dataset, labelEncoders)
+    
+    print("\n\n**Unseen Instance Transformed**\n")
+    unseenInstanceConverted = convertInput(unseenInstance, labelEncoders)
+    print(str(unseenInstance) + " -> " + str(unseenInstanceConverted))
+
+    print("\n\n**Classified Unseen Instance**\n")
+    newArray = np.array(unseenInstanceConverted)
+    classifiedInstance = classify(decision, unseenInstanceConverted, labelEncoders)
+    print("Prediction: " + classifiedInstance)
+    
     
 
 
-
+# Run the main function of the program
 main()
-
-
