@@ -69,5 +69,4 @@ def entropy(classLables: np.ndarray) -> float:
     for count in classCounter.values():
         probability = count/totalInstances
         entropy += (-probability * np.log2(probability))
-
     return entropy
