@@ -24,7 +24,7 @@ def main():
         ])
     
     # Hardcoded unseen instance for testing
-    unseenInstance = np.array(['No', 'Yes', 'No', 'No', 'Full', '$$$', 'No', 'Yes', 'Italian', '>60'])
+    unseenInstance = np.array(['Yes', 'No', 'Yes', 'Yes', 'Some', '$', 'No', 'No', 'French', '30-60'])
 
     labelEncoders = [preprocessing.LabelEncoder() for i in range(len(dataset[0]))]
     

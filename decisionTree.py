@@ -30,25 +30,25 @@ def decisionTree(dataset: np.ndarray, labelEncoders: np.ndarray) -> tree.Decisio
     print(y)
 
     # Create the decision tree
-    clf = tree.DecisionTreeClassifier(criterion="entropy")
-    clf = clf.fit(X, y)
+    dtc = tree.DecisionTreeClassifier(criterion="entropy")
+    dtc = dtc.fit(X, y)
 
     # Create a pretty tree using Graphviz to use in the application
-    prettyTree(clf, feature_names, labelEncoders)
+    prettyTree(dtc, feature_names, labelEncoders)
 
-    return clf
+    return dtc
 
 
 # Create a pretty tree using Graphviz
-def prettyTree(clf: tree.DecisionTreeClassifier, header: np.ndarray, labelEncoders: np.ndarray) -> None:
+def prettyTree(dtc: tree.DecisionTreeClassifier, header: np.ndarray, labelEncoders: np.ndarray) -> None:
     length = header.__len__()-1
-    newTree = tree.export_graphviz(clf, out_file=None, feature_names=header[0:length], class_names=labelEncoders[-1].classes_, filled=True, rounded=True, special_characters=True)
+    newTree = tree.export_graphviz(dtc, out_file=None, feature_names=header[0:length], class_names=labelEncoders[-1].classes_, filled=True, rounded=True, special_characters=True)
     graph = graphviz.Source(newTree, format="png")
     graph.render("DecisionTree")
 
 #  Classify a given set of instances
-def classify(clf: tree.DecisionTreeClassifier, input: np.ndarray, labelEncoders: np.ndarray) -> str:
-    prediction = clf.predict(input)
+def classify(dtc: tree.DecisionTreeClassifier, input: np.ndarray, labelEncoders: np.ndarray) -> str:
+    prediction = dtc.predict(input)
     print("Prediction: ", prediction)
     return str(labelEncoders[-1].classes_[prediction[0].astype(int)])
     
